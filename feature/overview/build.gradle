@@ -1,0 +1,84 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.google.dagger.hilt.android'
+    id 'kotlin-kapt'
+}
+
+android {
+    namespace 'vc.weather.feature.overview'
+    compileSdk rootProject.ext.compileSdk
+
+    defaultConfig {
+        minSdk rootProject.ext.minSdk
+        targetSdk rootProject.ext.targetSdk
+
+        consumerProguardFiles "consumer-rules.pro"
+
+        vectorDrawables {
+            useSupportLibrary true
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion rootProject.ext.compose_compiler_version
+    }
+    buildFeatures {
+        compose true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+    implementation project(":core:ui")
+    implementation project(':data:weather')
+
+    implementation libraries.androidx_core
+    implementation libraries.androidx_lifecycle
+    implementation libraries.androidx_viewmodel
+
+    implementation libraries.androidx_compose_ui
+    implementation libraries.androidx_compose_ui_tooling
+    implementation libraries.androidx_compose_ui_tooling_preview
+    implementation libraries.androidx_compose_material_3
+    implementation libraries.androidx_compose_material_3_icons
+    implementation libraries.compose_navigation
+    implementation libraries.compose_navigation_hilt
+    implementation libraries.accompanist_permissions
+    implementation libraries.accompanist_system_ui
+    implementation libraries.accompanist_transition
+
+    def lifecycle = '2.6.2'
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
+    // ViewModel utilities for Compose
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle"
+    // Lifecycles only (without ViewModel or LiveData)
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle"
+    // Lifecycle utilities for Compose
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:$lifecycle"
+
+    implementation libraries.coil
+    implementation libraries.coil_compose
+
+    implementation libraries.hilt
+    kapt libraries.hilt_compiler
+
+    implementation libraries.timber
+
+    testImplementation libraries.junit
+}

@@ -1,0 +1,83 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.google.dagger.hilt.android'
+    id 'kotlin-kapt'
+}
+
+android {
+    namespace 'vc.weather'
+    compileSdk rootProject.ext.compileSdk
+
+    defaultConfig {
+        applicationId "vc.weather"
+        minSdk rootProject.ext.minSdk
+        targetSdk rootProject.ext.targetSdk
+        versionCode rootProject.ext.versionCodeNumber
+        versionName rootProject.ext.versionNameString
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary true
+        }
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion rootProject.ext.compose_compiler_version
+    }
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+}
+
+dependencies {
+    implementation project(":core:ui")
+    implementation project(":feature:overview")
+
+    implementation libraries.androidx_core
+    implementation libraries.androidx_lifecycle
+    implementation libraries.androidx_compose_activity
+    implementation libraries.androidx_compose_ui
+    implementation libraries.androidx_compose_ui_tooling
+    implementation libraries.androidx_compose_ui_tooling_preview
+    implementation libraries.androidx_compose_material_3
+    implementation libraries.compose_navigation
+    implementation libraries.compose_navigation_hilt
+
+    testImplementation libraries.junit
+
+    androidTestImplementation libraries.androidx_test_junit
+    androidTestImplementation libraries.androidx_test_expresso
+    androidTestImplementation libraries.androidx_test_compose
+    androidTestImplementation libraries.androidx_test_manifest
+
+    debugImplementation libraries.androidx_compose_ui_tooling
+    debugImplementation libraries.androidx_compose_ui_tooling_preview
+
+    implementation libraries.hilt
+    kapt libraries.hilt_compiler
+
+
+    implementation libraries.timber
+}

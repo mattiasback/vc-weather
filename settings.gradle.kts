@@ -5,6 +5,7 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -13,7 +14,8 @@ dependencyResolutionManagement {
     }
 }
 
-include ':app'
-include ':data:weather'
-include ':feature:overview'
-include ':core:ui'
+rootProject.name = "Weather"
+include(":app")
+include(":data:weather")
+include(":feature:overview")
+include(":core:ui")

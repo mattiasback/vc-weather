@@ -1,6 +1,5 @@
 package vc.weather.feature.overview.ui
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -26,7 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -60,7 +59,7 @@ fun ForecastDetailsScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun ForecastDetailsContent(
+private fun ForecastDetailsContent(
     cityName: String = "",
     weather: String = "",
     iconUrl: String = "",
@@ -89,56 +88,72 @@ internal fun ForecastDetailsContent(
             )
         }
     ) {
-        Column(modifier = Modifier
-            .padding(it)
-            .padding(horizontal = 24.dp)
+        Column(
+            modifier = Modifier
+                .padding(it)
+                .padding(horizontal = 24.dp)
         ) {
             Spacer(modifier = Modifier.height(16.dp))
-            ElevatedCard(
+            ForecastCard(
                 modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.elevatedCardColors().copy(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary,
-                )
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Spacer(modifier = Modifier.height(48.dp))
-                    Text(
-                        text = weather,
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-                    Spacer(modifier = Modifier.height(48.dp))
-                    AsyncImage(
-                        modifier = Modifier.size(120.dp),
-                        contentDescription = stringResource(R.string.weather_icon_description),
-                        model = iconUrl,
-                        placeholder = painterResource(id = R.drawable.cloud24),
-                        fallback = painterResource(id = R.drawable.cloud24),
-                        contentScale = ContentScale.FillHeight,
-                        alignment = Alignment.Center
-                    )
-                    Spacer(modifier = Modifier.height(48.dp))
-                    Text(
-                        text = stringResource(R.string.details_temperature, temperature),
-                        style = MaterialTheme.typography.headlineLarge
-                    )
-                    Text(
-                        text = stringResource(R.string.details_feels_like) + stringResource(R.string.details_temperature, feelsLike),
-                        style = MaterialTheme.typography.headlineSmall
-                    )
-                    Spacer(modifier = Modifier.height(48.dp))
-                }
-            }
+                weather = weather,
+                iconUrl = iconUrl,
+                temperature = temperature,
+                feelsLike = feelsLike
+            )
         }
     }
 }
 
+@Composable
+private fun ForecastCard(
+    modifier: Modifier = Modifier,
+    weather: String = "",
+    iconUrl: String = "",
+    temperature: String = "",
+    feelsLike: String = ""
+) {
+    ElevatedCard(
+        modifier = modifier,
+        colors = CardDefaults.elevatedCardColors().copy(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+        )
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(48.dp))
+            Text(
+                text = weather,
+                style = MaterialTheme.typography.headlineSmall
+            )
+            Spacer(modifier = Modifier.height(48.dp))
+            AsyncImage(
+                modifier = Modifier.size(120.dp),
+                contentDescription = stringResource(R.string.weather_icon_description),
+                model = iconUrl,
+                placeholder = painterResource(id = R.drawable.cloud24),
+                fallback = painterResource(id = R.drawable.cloud24),
+                contentScale = ContentScale.FillHeight,
+                alignment = Alignment.Center
+            )
+            Spacer(modifier = Modifier.height(48.dp))
+            Text(
+                text = stringResource(R.string.details_temperature, temperature),
+                style = MaterialTheme.typography.headlineLarge
+            )
+            Text(
+                text = stringResource(R.string.details_feels_like) + stringResource(R.string.details_temperature, feelsLike),
+                style = MaterialTheme.typography.headlineSmall
+            )
+            Spacer(modifier = Modifier.height(48.dp))
+        }
+    }
+}
 
-@Preview(showBackground = false)
-@Preview(showBackground = false, uiMode = UI_MODE_NIGHT_YES)
+@PreviewLightDark
 @Composable
 private fun OverviewPreview() {
     WeatherTheme {

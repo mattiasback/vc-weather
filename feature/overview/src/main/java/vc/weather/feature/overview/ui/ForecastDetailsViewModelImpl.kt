@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import vc.weather.data.forecast.repository.ForecastRepository
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,7 +22,7 @@ class ForecastDetailsViewModelImpl @Inject constructor(
     private val _cityId: Int? = savedStateHandle["cityId"]
 
     private val _forecast = forecastRepository.forecasts.map {
-        it.firstOrNull { forecast -> forecast.cityId == _cityId}
+        it.firstOrNull { forecast -> forecast.cityId == _cityId }
     }
 
     private val _uiState = MutableStateFlow(ForecastDetailsUiState())
@@ -31,8 +30,7 @@ class ForecastDetailsViewModelImpl @Inject constructor(
         state.copy(
             cityName = forecast?.cityName.orEmpty(),
             iconUrl = forecast?.iconUrl.orEmpty(),
-            weather = forecast?.description.orEmpty()
-                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() },
+            weather = forecast?.description.orEmpty().capitalize(),
             temperature = forecast?.temperature.orEmpty(),
             feelsLike = forecast?.feelsLike.orEmpty()
         )

@@ -1,6 +1,5 @@
 package vc.weather.feature.overview.ui
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,7 +17,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
@@ -32,7 +31,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -78,12 +77,11 @@ private fun OverviewContent(
         }
     }
 
-    Scaffold {
+    Surface {
         Box(modifier = Modifier.nestedScroll(refreshState.nestedScrollConnection)) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(it)
                     .background(MaterialTheme.colorScheme.background),
                 contentPadding = PaddingValues(start = 24.dp, end = 24.dp, top = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -95,36 +93,11 @@ private fun OverviewContent(
                     )
                 }
                 items(items = cities) { city ->
-                    ElevatedCard(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onCityClick(city.id) },
-                        colors = CardDefaults.elevatedCardColors().copy(
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary,
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                                .minimumInteractiveComponentSize(),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = city.name,
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                            Spacer(modifier = Modifier.weight(1f))
-                            AsyncImage(
-                                contentDescription = stringResource(R.string.weather_icon_description),
-                                model = city.iconUrl,
-                                placeholder = painterResource(id = R.drawable.cloud24),
-                                fallback = painterResource(id = R.drawable.cloud24),
-                                contentScale = ContentScale.Fit,
-                                alignment = Alignment.Center
-                            )
-                        }
-                    }
+                    CityCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        onCityClick = onCityClick,
+                        city = city
+                    )
                 }
             }
             PullToRefreshContainer(
@@ -135,14 +108,48 @@ private fun OverviewContent(
     }
 }
 
+@Composable
+private fun CityCard(
+    modifier: Modifier = Modifier,
+    onCityClick: (Int) -> Unit,
+    city: UiCity
+) {
+    ElevatedCard(
+        modifier = modifier.clickable { onCityClick(city.id) },
+        colors = CardDefaults.elevatedCardColors().copy(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .minimumInteractiveComponentSize(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = city.name,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            AsyncImage(
+                contentDescription = stringResource(R.string.weather_icon_description),
+                model = city.iconUrl,
+                placeholder = painterResource(id = R.drawable.cloud24),
+                fallback = painterResource(id = R.drawable.cloud24),
+                contentScale = ContentScale.Fit,
+                alignment = Alignment.Center
+            )
+        }
+    }
+}
 
-@Preview(showBackground = true)
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
+@PreviewLightDark
 @Composable
 private fun OverviewPreview() {
     WeatherTheme {
         OverviewContent(
-            cities = City.values().map {
+            cities = City.entries.map {
                 UiCity(
                     id = (1..1000).random(),
                     name = it.name,

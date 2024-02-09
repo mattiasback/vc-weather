@@ -38,7 +38,7 @@ class OverviewViewModelImpl @Inject constructor(
 
     init {
         viewModelScope.launch {
-            forecastRepository.fetchForecasts(City.values().toList())
+            forecastRepository.fetchForecasts(City.entries)
         }
     }
 
@@ -50,7 +50,7 @@ class OverviewViewModelImpl @Inject constructor(
             }
             OverviewUiEvent.Refresh -> {
                 viewModelScope.launch {
-                    forecastRepository.fetchForecasts(City.values().toList())
+                    forecastRepository.fetchForecasts(City.entries)
                 }
             }
         }
